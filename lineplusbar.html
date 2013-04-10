@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+
+<!-- Used for NVD3-->
+<link href="http://tvinci.github.io/webs/chart/src/nv.d3.css" rel="stylesheet" type="text/css">
+<script src="http://tvinci.github.io/webs/chart/lib/d3.v2.js"></script>
+<script src="http://tvinci.github.io/webs/chart/nv.d3.js"></script>
+<script src="http://tvinci.github.io/webs/chart/src/tooltip.js"></script>
+<script src="http://tvinci.github.io/webs/chart/src/utils.js"></script>
+<script src="http://tvinci.github.io/webs/chart/src/models/legend.js"></script>
+<script src="http://tvinci.github.io/webs/chart/src/models/axis.js"></script>
+<script src="http://tvinci.github.io/webs/chart/src/models/multiBar.js"></script>
+<script src="http://tvinci.github.io/webs/chart/src/models/multiBarChart.js"></script>
+
+
+<!-- Used for WATable-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.js" type="text/javascript"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="http://tvinci.github.io/webs/watable/jquery.watable.js" type="text/javascript" charset="utf-8"></script>
+    <link rel='stylesheet' href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-combined.min.css"/>
+    <link rel='stylesheet' href='http://tvinci.github.io/webs/watable/watable.css'/>
+
+<style>
+/*
+  Minimum height and width is a good idea to prevent negative SVG dimensions...
+  For example width should be =< margin.left + margin.right + 1,
+  of course 1 pixel for the entire chart would not be very useful, BUT should not have errors
+*/
+#chart {
+  width: 300px;
+  height: 100px;
+  margin: 10px;
+  min-width: 200px;
+  min-height: 200px;
+}
+svg text{font-size:9px;}
+</style>
+
+<script>
+
+
+jQuery(document).ready(function ($) {
+
+  nv.addGraph(function() {
+     //var testdata = exampleData();
+     var chart = nv.models.linePlusBarChart()
+           .margin({top: 30, right: 60, bottom: 50, left: 70})
+           .x(function(d,i) { return i });
+
+     chart.xAxis.tickFormat(function(d) { return d3.format(',f')(d+1)+"x" });
+     chart.y1Axis.tickFormat(d3.format(',f'));
+     chart.y2Axis.tickFormat(d3.format(',f'));
+ 
+     //forces the chart to start at 0
+     // if you set this to [0,100] and your data's domain is -10 to 110, the domain will be [-10,110]
+     chart.lines.forceY([0]);
+ 
+     d3.select('#chart svg').datum(eval("overview_data")).transition().duration(500).call(chart);
+      d3.selectAll("rect.nv-bar").style("fill", function(d, i){return i > 50 ? "red":"blue";});
+     nv.utils.windowResize(chart.update);
+ 
+     return chart;
+ });
+ 
+ 
+var overview_data=[ 
+     { "key" : "Achieved" , "bar": true,"values" : [ [ 1 , 30] , [ 2 , 70] , [ 3 , 200] ]} , 
+     { "key" : "Required" ,             "values" : [ [ 1 , 50] , [ 2 , 100] , [ 3 , 150] ]}
+    ].map(function(series) {series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });return series;});
+
+
+});
+
+</script>
+
+
+</head>
+<body>
+<div class="center" style="width: 1200px;">
+
+<div id='chart'>
+  <svg > </svg>
+</div>
+
+</div>
+</body>
+</html>
