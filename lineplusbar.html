@@ -46,9 +46,10 @@ jQuery(document).ready(function ($) {
      //var testdata = exampleData();
      var chart = nv.models.linePlusBarChart()
            .margin({top: 30, right: 60, bottom: 50, left: 70})
-           .x(function(d,i) { return i });
+           .x(function(d,i) { return i; });
 
-     chart.xAxis.tickFormat(function(d) { return d3.format(',f')(d+1)+"x" });
+     //chart.xAxis.tickFormat(function(d) { return d3.format(',f')(d+1)+"x" });
+     chart.xAxis.tickFormat(function(d) {return overview_data[0].values[d].x; });
      chart.y1Axis.tickFormat(d3.format(',f'));
      chart.y2Axis.tickFormat(d3.format(',f'));
  
@@ -65,8 +66,8 @@ jQuery(document).ready(function ($) {
  
  
 var overview_data=[ 
-     { "key" : "Achieved" , "bar": true,"values" : [ [ 1 , 30] , [ 2 , 70] , [ 3 , 200] ]} , 
-     { "key" : "Required" ,             "values" : [ [ 1 , 50] , [ 2 , 100] , [ 3 , 150] ]}
+     { "key" : "Achieved" , "bar": true,"values" : [ [ "1x" , 30] , [ "2x" , 70] , [ "3x" , 200] ]} , 
+     { "key" : "Required" ,             "values" : [ [ "1x" , 50] , [ "2x" , 100] , [ "3x" , 150] ]}
     ].map(function(series) {series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });return series;});
 
 
